@@ -9,23 +9,29 @@ const authRoutes = require('./routes/authRoutes');
 
 const app = express();
 
-// connect to Mongo
+// ✅ Connect to MongoDB
 connectDB();
 
-// CORS + body + cookies
-app.use(cors({ origin: 'https://task-manajer.netlify.app', credentials: true }));
+// ✅ Allow Netlify frontend to access backend
+app.use(cors({
+  origin: 'https://task-manajer.netlify.app',
+  credentials: true
+}));
+
+// ✅ Middleware for JSON, cookies
 app.use(bodyParser.json());
 app.use(cookieParser());
 
-// route registration
+// ✅ Routes
 app.use('/tasks', taskRoutes);
 app.use('/auth', authRoutes);
 
+// ✅ Debug log for each request
 app.use((req, res, next) => {
-    console.log(req.method, req.path);
-    next();
+  console.log(`${req.method} ${req.path}`);
+  next();
 });
 
-
-// start server
-app.listen(5000, () => console.log('Server running on port 5000'));
+// ✅ Start server
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
